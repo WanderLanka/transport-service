@@ -23,10 +23,18 @@ exports.getAllVehicles = async (req, res) => {
     const vehicles = await Vehicle.find({ availability: 'available' });
     
     console.log('Found vehicles:', vehicles.length);
-    res.status(200).json(vehicles);
+    res.status(200).json({ 
+      success: true,
+      data: vehicles,
+      count: vehicles.length 
+    });
   } catch (err) {
     console.error('Error fetching all vehicles:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error',
+      message: 'Failed to fetch vehicles'
+    });
   }
 };
 
@@ -132,12 +140,23 @@ exports.getVehicleById = async (req, res) => {
     const vehicle = await Vehicle.findById(vehicleId);
     
     if (!vehicle) {
-      return res.status(404).json({ error: 'Vehicle not found' });
+      return res.status(404).json({ 
+        success: false,
+        error: 'Vehicle not found' 
+      });
     }
     
-    res.status(200).json(vehicle);
+    res.status(200).json({ 
+      success: true,
+      data: vehicle 
+    });
   } catch (err) {
     console.error('Error fetching vehicle:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      success: false,
+      error: 'Internal server error',
+      message: 'Failed to fetch vehicle'
+    });
+
   }
 };

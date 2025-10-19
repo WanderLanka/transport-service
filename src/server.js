@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const vehicleRoutes = require('./routes/vehicleRoutes');
-const driverRoutes = require('./routes/driverRoutes');
 
 const app = express();
 
@@ -35,8 +34,6 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/', vehicleRoutes); // Mount vehicle routes at root
 app.use('/transport', vehicleRoutes); // Also mount at /transport for clarity
-app.use('/', driverRoutes); // Mount driver routes at root
-app.use('/transport', driverRoutes); // Also mount at /transport for clarity
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -64,11 +61,6 @@ const startServer = async () => {
       console.log(`   POST /vehicles - Create vehicle`);
       console.log(`   PUT /vehicles/:id - Update vehicle`);
       console.log(`   DELETE /vehicles/:id - Delete vehicle`);
-      console.log(`   GET /drivers - Get all drivers (public)`);
-      console.log(`   GET /mydrivers - Get user drivers`);
-      console.log(`   POST /adddriver - Create driver`);
-      console.log(`   PUT /updatedriver/:id - Update driver`);
-      console.log(`   DELETE /deletedriver/:id - Delete driver`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
