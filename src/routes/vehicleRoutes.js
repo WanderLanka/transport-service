@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const vehicleController = require('../controllers/vehicleController');
 const { verifyToken } = require('../middleware/auth');
-
 // Add debug middleware
 router.use((req, res, next) => {
   console.log(`🚗 Transport Service received: ${req.method} ${req.originalUrl}`);
@@ -26,6 +25,7 @@ router.get('/vehicles/:id', vehicleController.getVehicleById);
 // PROVIDER ENDPOINTS (for vehicle providers - authenticated)
 // Get all vehicles for authenticated user
 router.get('/vehicles', verifyToken, vehicleController.getVehicles);
+
 router.post('/vehicles', verifyToken, vehicleController.createVehicle);
 router.put('/vehicles/:id', verifyToken, vehicleController.updateVehicle);
 router.delete('/vehicles/:id', verifyToken, vehicleController.deleteVehicle);

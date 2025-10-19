@@ -1,4 +1,3 @@
-# Node dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -40,3 +39,4 @@ coverage/
 
 # Uploaded files
 uploads/
+

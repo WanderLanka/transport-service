@@ -157,5 +157,6 @@ exports.getVehicleById = async (req, res) => {
       error: 'Internal server error',
       message: 'Failed to fetch vehicle'
     });
+
   }
 };
