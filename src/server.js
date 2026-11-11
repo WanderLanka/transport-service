@@ -1,3 +1,4 @@
+const { start, installReadiness } = require('../runtime');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -5,6 +6,7 @@ const connectDB = require('./config/database');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 
 const app = express();
+installReadiness(app);
 
 // Middleware
 app.use(cors({
@@ -18,14 +20,13 @@ app.use(express.json());
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  console.log('Authorization header:', req.headers.authorization);
   next();
 });
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'Transport Service'
   });
@@ -46,28 +47,12 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server
-const startServer = async () => {
-  try {
-    await connectDB();
-    
-    const PORT = process.env.PORT || 3002;
-    app.listen(PORT, () => {
-      console.log(`🔐 Transport service running on port ${PORT}`);
-      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
-      console.log(`📋 Available endpoints:`);
-      console.log(`   GET /vehicles - Get user vehicles`);
-      console.log(`   GET /vehicles/all - Get all available vehicles`);
-      console.log(`   POST /vehicles - Create vehicle`);
-      console.log(`   PUT /vehicles/:id - Update vehicle`);
-      console.log(`   DELETE /vehicles/:id - Delete vehicle`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
 
-startServer();
+if (require.main === module) {
+  start(app, { connect: connectDB, port: process.env.PORT || 3002 }).catch(error => {
+    console.error('Service startup failed:', error.message);
+    process.exitCode = 1;
+  });
+}
 
 module.exports = app;
